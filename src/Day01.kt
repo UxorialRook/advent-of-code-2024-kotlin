@@ -10,11 +10,7 @@ fun main() {
             list2.add(temp[1].toInt())
         }
 
-
-        val sortedList1 = list1.sorted()
-        val sortedList2 = list2.sorted()
-
-        return sortedList1.zip(sortedList2) { elList1, elList2 ->
+        return list1.sorted().zip(list2.sorted()) { elList1, elList2 ->
             abs(elList1 - elList2)
         }.sum()
     }
