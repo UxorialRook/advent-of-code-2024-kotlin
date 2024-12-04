@@ -2,6 +2,12 @@ import kotlin.math.abs
 
 fun main() {
 
+    fun isValidMatriceValue(matrice: List<String>, position: Pair<Int, Int>): Boolean {
+        val (row, col) = position
+        val charToFind = listOf('M', 'S')
+        return row in matrice.indices && col in matrice[row].indices && matrice[row][col] in charToFind
+    }
+
     fun hasAnXMASPattern(matrice: List<String>, position : Pair<Int, Int> ) : Boolean
     {
         // 1. We store all the directions possible
@@ -10,49 +16,30 @@ fun main() {
         val upLeft = Pair(-1, -1)
         val upRight = Pair(-1, 1)
 
-
         // 2. We calculate the relative position
         val upRightPos = Pair(position.first + upRight.first, position.second + upRight.second)
         val downLeftPos = Pair(position.first + downLeft.first, position.second + downLeft.second)
         val upLeftPos = Pair(position.first + upLeft.first, position.second + upLeft.second)
         val downRightPos = Pair(position.first + downRight.first, position.second + downRight.second)
 
-        var upRightToBottomLeftIsOk = false
-        var upLeftTobottomRightIsOk = false
+        val isUpRightValid = isValidMatriceValue(matrice, upRightPos)
+        val isDownLeftValid = isValidMatriceValue(matrice, downLeftPos)
+        val isDownRightValid = isValidMatriceValue(matrice, downRightPos)
+        val isUpLeftValid = isValidMatriceValue(matrice, upLeftPos)
 
-        // 3. Starting with the upRight -> bottomLeft
-        val isUpRightValid = upRightPos.first in matrice.indices &&
-                upRightPos.second in matrice[upRightPos.first].indices &&
-                (matrice[upRightPos.first][upRightPos.second] == 'M' || matrice[upRightPos.first][upRightPos.second] == 'S')
-        if (isUpRightValid) {
-            val upRightChar = matrice[upRightPos.first][upRightPos.second]
-            val expectedDownLeftChar = if (upRightChar == 'M') 'S' else 'M'
-
-            upRightToBottomLeftIsOk = downLeftPos.first in matrice.indices &&
-                    downLeftPos.second in matrice[downLeftPos.first].indices &&
-                    matrice[downLeftPos.first][downLeftPos.second] == expectedDownLeftChar
+        if(!(isUpRightValid && isDownLeftValid && isDownRightValid && isUpLeftValid)) {
+            return false;
         }
 
-        // 4. Same with the upLeft -> bottomRight
-        val isUpLeftValid = upLeftPos.first in matrice.indices &&
-                upLeftPos.second in matrice[upLeftPos.first].indices &&
-                (matrice[upLeftPos.first][upLeftPos.second] == 'M' || matrice[upLeftPos.first][upLeftPos.second] == 'S')
+        val upRightVal = matrice[upRightPos.first][upRightPos.second]
+        val downLeftVal = matrice[downLeftPos.first][downLeftPos.second]
+        val downRightVal = matrice[downRightPos.first][downRightPos.second]
+        val upLeftVal = matrice[upLeftPos.first][upLeftPos.second]
 
-        if (isUpLeftValid) {
-            val upLeftChar = matrice[upLeftPos.first][upLeftPos.second]
-            val expectedDownRightChar = if (upLeftChar == 'M') 'S' else 'M'
-            upLeftTobottomRightIsOk = downRightPos.first in matrice.indices &&
-                    downRightPos.second in matrice[downRightPos.first].indices &&
-                    matrice[downRightPos.first][downRightPos.second] == expectedDownRightChar
-        }
-
-        return upRightToBottomLeftIsOk && upLeftTobottomRightIsOk
+        return (upRightVal != downLeftVal) && (upLeftVal != downRightVal)
     }
 
     fun findXMAS(matrice: List<String>): Int {
-
-        val numberRows = matrice.size;
-        val numberCols = matrice[0].length
         var number = 0
 
         for (row in matrice.indices) {
