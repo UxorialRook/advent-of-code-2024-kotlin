@@ -114,6 +114,8 @@ fun main() {
     }
 
     fun part2(input: List<String>): Int {
+        // The 1000 is totally arbitrary.
+        // It only needs to be big enough to covers the entire matrice
         return solvePart2(input, 0, 1000)
     }
 
