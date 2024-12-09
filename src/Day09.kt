@@ -106,6 +106,7 @@ fun solvePart2(matrice: List<String>, min: Int, max: Int): Int {
     }
 }
 
+// Example Usage
 fun main() {
 
     fun part1(input: List<String>): Int {
